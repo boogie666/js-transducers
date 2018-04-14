@@ -4,7 +4,7 @@ const {
 } = require("rx");
 const {
     isReduced
-} = require("./transducers.js");
+} = require("./reduce.js");
 
 
 function TransduceObserver(o, xform) {

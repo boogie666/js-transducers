@@ -15,6 +15,7 @@ const {
     dedupe,
     distinct,
     interpose,
+    takeNth,
     drop,
     comp
 } = require("./transducers.js");
@@ -28,7 +29,7 @@ const {
 } = require("rx");
 
 
-const process = comp(drop(3), take(3), partitionAll(2));
+const process = comp(takeNth(3));
 
 /*
 console.log("list -> list", into(List(), process, List([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])));
@@ -43,8 +44,4 @@ console.log("obervable", value);
 */
 
 console.log("array -> array", into([], process, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
-const p = distinct();
-const d = comp(interpose(","), dedupe());
-
-console.log(transduce(d,completing((a,b) => a + b), "", [1,1,1,2,2,2,3,3,4,3,1]));
 

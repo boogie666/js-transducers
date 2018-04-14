@@ -1,7 +1,7 @@
 const {
     addSelfReduceMethod,
     isReduced
-} = require("./transducers.js");
+} = require("./reduce.js");
 
 const {
     Collection,

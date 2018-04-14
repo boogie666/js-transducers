@@ -1,36 +1,4 @@
-function Reduced(val) {
-    this.value = val;
-}
-
-function reduced(x) {
-    return new Reduced(x);
-}
-
-function is_reduced(x) {
-    return x instanceof Reduced;
-}
-
-const SELF_REDUCE_METHOD = "@@com.boogie666.transducers/self_reduce";
-
-function reduce_method(o) {
-    return o[SELF_REDUCE_METHOD];
-}
-
-function can_self_reduce(xs) {
-    return !!reduce_method(xs);
-}
-
-function add_self_reduce_method(proto, fn) {
-    proto[SELF_REDUCE_METHOD] = fn;
-}
-
-
-function reduce(f, init, xs) {
-    if (can_self_reduce(xs)) {
-        return reduce_method(xs).call(xs, f, init);
-    }
-    throw "Can't reduce " + xs;
-}
+const {reduce, isReduced, reduced} = require("./reduce.js");
 
 function comp(...fns) {
     return function(x) {
@@ -63,7 +31,7 @@ function completing(fn) {
 function preserving_reduced(rf) {
     return function(a, b) {
         var result = rf(a, b);
-        if (is_reduced(result)) {
+        if (isReduced(result)) {
             return reduced(result);
         }
         return result;
@@ -178,7 +146,7 @@ function remove(pred) {
 
 
 function unreduced(possible_reduced) {
-    if (is_reduced(possible_reduced)) {
+    if (isReduced(possible_reduced)) {
         return possible_reduced.value;
     }
     return possible_reduced;
@@ -317,7 +285,7 @@ function interpose(separator) {
                 default:
                     if (started) {
                         result = rf(result, separator);
-                        if (is_reduced(result)) {
+                        if (isReduced(result)) {
                             return result;
                         }
                         return rf(result, item);
@@ -426,7 +394,5 @@ module.exports = {
     unreduced: unreduced,
     transduce: transduce,
     reduced: reduced,
-    isReduced: is_reduced,
-    addSelfReduceMethod: add_self_reduce_method,
     completing: completing
 };
