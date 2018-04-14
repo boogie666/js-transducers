@@ -1,4 +1,8 @@
-const {reduce, isReduced, reduced} = require("./reduce.js");
+const {
+    reduce,
+    isReduced,
+    reduced
+} = require("./reduce.js");
 
 function comp(...fns) {
     return function(x) {

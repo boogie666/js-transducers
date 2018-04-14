@@ -1,7 +1,12 @@
 require("./array.js");
 require("./immutable.js");
-const { List, Set } = require("immutable");
-const {withObservable} = require("./rxjs.js");
+const {
+    List,
+    Set
+} = require("immutable");
+const {
+    withObservable
+} = require("./rxjs.js");
 const {
     map,
     cat,
@@ -44,4 +49,3 @@ console.log("obervable", value);
 */
 
 console.log("array -> array", into([], process, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
-

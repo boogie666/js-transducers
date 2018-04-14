@@ -33,8 +33,8 @@ function reduce(f, init, xs) {
 }
 
 module.exports = {
-    reduced : reduced,
+    reduced: reduced,
     reduce: reduce,
-    isReduced : is_reduced,
-    addSelfReduceMethod : add_self_reduce_method
+    isReduced: is_reduced,
+    addSelfReduceMethod: add_self_reduce_method
 };
