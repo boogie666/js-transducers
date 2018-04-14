@@ -378,11 +378,26 @@ function remove_indexed(pred) {
     });
 }
 
-/*
-take-nth
-partition-by
-halt-when
-*/
+
+function take_nth(n) {
+    return function(rf) {
+        let count = -1;
+        return function(result, item) {
+            switch (arguments.length) {
+                case 0:
+                    return rf();
+                case 1:
+                    return rf(result);
+                default:
+                    count++;
+                    if (count % n === 0) {
+                        return rf(result, item);
+                    }
+                    return result;
+            }
+        };
+    };
+}
 
 
 
@@ -406,8 +421,8 @@ module.exports = {
     distinct: distinct,
     interpose: interpose,
     remove: remove,
-    removeIndexed : remove_indexed,
-
+    removeIndexed: remove_indexed,
+    takeNth: take_nth,
     unreduced: unreduced,
     transduce: transduce,
     reduced: reduced,
