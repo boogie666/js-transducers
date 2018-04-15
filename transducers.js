@@ -182,6 +182,40 @@ function partition_all(count) {
 }
 
 
+function partition_by(fn){
+    const NOTHING =  "com.boogie666.tranducers/nothing";
+    return function(rf){
+        let value = NOTHING;
+        let partitions = [];
+        return function(result, item){
+            switch(arguments.length){
+            case 0: return rf();
+            case 1:
+                if(partitions.length > 0){
+                    return rf(rf(result, partitions));
+                }
+                return rf(result);
+            default:
+                let val = fn(item);
+                let pval = value;
+                value = val;
+                if(pval === NOTHING || pval === val){
+                    partitions.push(item);
+                    return result;
+                }else{
+                    result = rf(result, partitions);
+                    if(!isReduced(result)){
+                        partitions = [item];
+                    }else{
+                        partitions = [];
+                    }
+                    return result;
+                }
+            }
+        };
+    };
+}
+
 function take_while(pred) {
     return function(rf) {
         return function(result, item) {
@@ -386,6 +420,7 @@ module.exports = {
     keepIndexed: keep_indexed,
     filterIndexed: filter_indexed,
     partitionAll: partition_all,
+    partitionBy : partition_by,
     takeWhile: take_while,
     dropWhile: drop_while,
     randomSample: random_sample,

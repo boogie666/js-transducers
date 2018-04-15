@@ -53,6 +53,7 @@ addSelfReduceMethod(Seq.prototype, self_reduce_seq);
 addInjestMethod(List.prototype, List.prototype.push);
 addInjestMethod(Set.prototype, Set.prototype.add);
 addInjestMethod(Stack.prototype, Stack.prototype.push);
+
 addInjestMethod(Map.prototype, function(pair) {
     if (pair.length !== 2) {
         throw new Error("Maps must injest a pair of key and value");
