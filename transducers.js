@@ -134,9 +134,9 @@ function filter(pred) {
 }
 
 function keep(pred) {
-    return filter(function(item) {
-        return pred(item) != null;
-    });
+    return comp(map(pred), filter(function(item) {
+        return item != null;
+    }));
 }
 
 
