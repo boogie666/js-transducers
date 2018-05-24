@@ -433,9 +433,13 @@ function window(size){
     };
 }
 
+const map_to = function(constant){
+    return map(_ => constant);
+};
 
 module.exports = {
     map: map,
+    mapTo: map_to,
     filter: filter,
     keep: keep,
     drop: drop,
