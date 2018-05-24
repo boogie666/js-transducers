@@ -4,6 +4,10 @@ const {
     reduced
 } = require("./reduce.js");
 
+
+
+const NOTHING =  "@@com.boogie666.tranducers/nothing@@";
+
 function comp(...fns) {
     return function(x) {
         for (var i = fns.length - 1; i >= 0; i--) {
@@ -183,7 +187,6 @@ function partition_all(count) {
 
 
 function partition_by(fn){
-    const NOTHING =  "com.boogie666.tranducers/nothing";
     return function(rf){
         let value = NOTHING;
         let partitions = [];
@@ -269,7 +272,7 @@ function triple_eq(a, b) {
 function dedupe(eqFn) {
     eqFn = eqFn || triple_eq;
     return function(rf) {
-        let previous_value = null;
+        let previous_value = NOTHING;
         return function(result, item) {
             switch (arguments.length) {
                 case 0:
@@ -277,7 +280,7 @@ function dedupe(eqFn) {
                 case 1:
                     return rf(result);
                 default:
-                    if (previous_value == null || !eqFn(previous_value, item)) {
+                    if (previous_value === NOTHING || !eqFn(previous_value, item)) {
                         result = rf(result, item);
                     }
                     previous_value = item;
@@ -405,6 +408,33 @@ function take_nth(n) {
     };
 }
 
+function window(size){
+    return function(rf){
+        var window = [];
+        return function(result, item){
+            switch(arguments.length){
+            case 0:
+                return rf();
+            case 1:
+                let result_window = window.concat();
+                window = [];
+                var rr = rf(result, result_window);
+                if(isReduced(rr)){
+                    return rf(rr.value);
+                }
+                return rf(rr);
+            default:
+                window.push(item);
+                if(window.length === size){
+                    let result_window = window.concat();
+                    window.shift();
+                    return rf(result, result_window);
+                }
+                return result;
+            }
+        };
+    };
+}
 
 
 module.exports = {
@@ -430,6 +460,7 @@ module.exports = {
     remove: remove,
     removeIndexed: remove_indexed,
     takeNth: take_nth,
+    window : window,
     unreduced: unreduced,
     transduce: transduce,
     reduced: reduced,
