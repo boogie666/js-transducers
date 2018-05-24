@@ -6,7 +6,7 @@ const {
 
 
 
-const NOTHING =  "@@com.boogie666.tranducers/nothing@@";
+const NOTHING =  "@@com.boogie666.tranducers/nothing_" + Math.random() + "@@";
 
 function comp(...fns) {
     return function(x) {
@@ -195,7 +195,8 @@ function partition_by(fn){
             case 0: return rf();
             case 1:
                 if(partitions.length > 0){
-                    return rf(rf(result, partitions));
+                    result = unreduced(rf(result, partitions));
+                    partitions = [];
                 }
                 return rf(result);
             default:
@@ -418,11 +419,7 @@ function window(size){
             case 1:
                 let result_window = window.concat();
                 window = [];
-                var rr = rf(result, result_window);
-                if(isReduced(rr)){
-                    return rf(rr.value);
-                }
-                return rf(rr);
+                return rf(unreduced(rf(result, result_window)));
             default:
                 window.push(item);
                 if(window.length === size){
